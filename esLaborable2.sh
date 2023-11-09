@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Función para determinar si una fecha es un día laborable o no
-esLaborable() {
+# Función para determinar el tipo de día (feriado, no laborable, laborable)
+esTipoDia() {
     fecha="$1"
     lista_feriados=("$2")
 
@@ -13,7 +13,7 @@ esLaborable() {
         return
     fi
 
-    # Resto de tu función esLaborable (modificado para Bash)
+    # Resto de tu función esTipoDia (modificado para Bash)
     fecha_obj=$(date -d "$fecha" +"%Y-%m-%d")
 
     if [[ " ${lista_feriados[@]} " =~ " $fecha_obj " ]]; then
@@ -25,7 +25,12 @@ esLaborable() {
 
 # Descarga la lista de feriados desde la URL proporcionada
 url_feriados='http://servicios.infoleg.gob.ar/infolegInternet/anexos/170000-174999/174389/norma.htm'
-lista_feriados=($(curl -s "$url_feriados" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}'))
 
-# Ejemplo de uso
-esLaborable "2023-11-07" "${lista_feriados[@]}"
+# Extrae las fechas del formato con nombres de meses
+lista_feriados=($(curl -s "$url_feriados" | grep -oP '\d{1,2} de [^\s]+'))
+
+# Obtén la fecha como argumento de la consola
+fecha_consola="$1"
+
+# Llama a la función esTipoDia con el argumento de la consola
+esTipoDia "$fecha_consola" "${lista_feriados[@]}"
