@@ -5,6 +5,14 @@ esTipoDia() {
     fecha="$1"
     lista_feriados=("$2")
 
+    dia_semana=$(date -d "$fecha" +%u)
+
+    # Verifica si la fecha es un día no laborable (fin de semana)
+    if [ $dia_semana -ge 6 ]; then
+        echo "La fecha $fecha es un día no laborable (fin de semana)."
+        return
+    fi
+
     # Resto de tu función esTipoDia (modificado para Bash)
     fecha_obj=$(date -d "$fecha" +"%Y-%m-%d")
 
